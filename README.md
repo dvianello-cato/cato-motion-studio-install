@@ -6,14 +6,13 @@ Con il Cato Motion Studio fai i video di Cato sul tuo Mac, parlando con Claude: 
 
 ---
 
-## Prima di iniziare: 4 cose
+## Prima di iniziare: 3 cose
 
 1. **Un Mac.** Lo studio funziona solo su Mac.
 2. **La password del tuo Mac**, quella che usi per accendere il computer. Serve una volta sola durante l'installazione.
-3. **Un account GitHub.** Se non ce l'hai, crealo gratis su [github.com/signup](https://github.com/signup) con la tua email di lavoro. Poi **manda a Diego il tuo nome utente GitHub**.
-4. **L'invito di Diego.** Ti arriva un'email da GitHub con scritto *"invited you to collaborate on cato-motion-studio"*: aprila e clicca **Accept invitation**. Senza questo passaggio l'installazione si ferma a metà.
+3. **Un account Claude di Cato.** Se non ce l'hai, chiedilo a Diego.
 
-Ti serve anche un **account Claude di Cato**: se non ce l'hai, chiedilo a Diego.
+Non serve nessun account GitHub.
 
 ---
 
@@ -36,7 +35,6 @@ L'installatore fa quasi tutto da solo. Ogni tanto si ferma e ti chiede qualcosa:
 |---|---|
 | **`Password:`** | Scrivi la password del Mac e premi **Invio**. **Mentre scrivi non vedi niente, nemmeno i puntini: è normale.** |
 | **`Press RETURN/ENTER to continue`** | Premi **Invio**. |
-| **`First copy your one-time code: XXXX-XXXX`** | Copia o annota il codice, premi **Invio**: si apre il browser. Entra in GitHub, incolla il codice e clicca **Authorize**. Poi torna al Terminale. |
 | Una domanda che finisce con **`(Y/n)`** | Premi **Invio**. |
 
 Alcuni passaggi durano qualche minuto. Lascia il Terminale aperto finché non si apre **Claude Code**.
@@ -50,7 +48,7 @@ Alla fine si apre Claude Code, sempre nel Terminale. La prima volta:
 
 Claude poi controlla da solo che tutto funzioni e alla fine ti mostra una **tabella tutta verde**. Se qualcosa non è verde, ti dice lui cosa fare.
 
-**Fatto.** Sulla Scrivania ora hai la cartella **cato-motion-studio**.
+**Fatto.** Sulla Scrivania ora hai la cartella **cato-motion-studio**, con dentro tutto il design system di Cato: loghi, font, colori, musica e icone.
 
 ---
 
@@ -78,7 +76,7 @@ La guida completa, con ritocchi, esportazione e consigli, è nel file **`COME-SI
 
 | Problema | Soluzione |
 |---|---|
-| *"il tuo utente GitHub non vede il repo"* | Non hai ancora accettato l'invito di Diego: cerca l'email di GitHub, clicca **Accept invitation** e **rilancia il comando del passo 2**. |
+| Avevi già lo studio | Rilancia il comando del passo 2: scarica la versione nuova e ci rimette dentro i tuoi film. Quella vecchia resta sulla Scrivania come *cato-motion-studio-vecchio-…*. |
 | L'installazione si è interrotta | Rilancia lo stesso comando: riparte e fa solo quello che manca. |
 | *"command not found: claude"* | Chiudi il Terminale (⌘ Cmd + Q), riaprilo e riprova. |
 | Qualcosa non funziona dentro Claude Code | Scrivi `/setup-studio`: ricontrolla tutto e ti dice cosa fare. |
@@ -86,4 +84,4 @@ La guida completa, con ritocchi, esportazione e consigli, è nel file **`COME-SI
 
 ---
 
-<sub>Questa pagina è pubblica perché serve prima di avere accesso allo studio. Contiene solo lo script di installazione, `install.sh`: lo studio vero, con il brand e i progetti, resta privato.</sub>
+<sub>Lo studio vero sta in [cato-motion-studio](https://github.com/dvianello-cato/cato-motion-studio): strumenti, brand e modelli. I video che fai restano sul tuo Mac.</sub>
