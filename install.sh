@@ -3,8 +3,8 @@
 #
 #   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/dvianello-cato/cato-motion-studio-install/main/install.sh)"
 #
-# Deve stare in un posto pubblico, perché serve PRIMA di avere accesso al repo privato. Per questo fa
-# solo il minimo per arrivarci: Homebrew, la CLI di GitHub con il login, Claude Code, il clone. Poi
+# Non serve nessun account GitHub: lo studio è pubblico. Fa solo il minimo per arrivarci:
+# Homebrew, Node, FFmpeg, Claude Code e il download dello studio. Poi
 # apre Claude Code nella cartella con /setup-studio, che fa tutto il resto (Node, FFmpeg, plugin, test).
 # Rilanciarlo è sicuro: rifà solo quello che manca e aggiorna la cartella.
 set -euo pipefail
@@ -42,16 +42,6 @@ riga="eval \"\$($(command -v brew) shellenv)\""
 profilo "$riga"
 ok "$(brew --version | head -1)"
 
-say "GitHub"
-command -v gh > /dev/null 2>&1 || brew install gh > /dev/null
-if ! gh auth status -h github.com > /dev/null 2>&1; then
-  echo "  si apre il browser: entra con il tuo utente GitHub"
-  gh auth login -h github.com -p https -w
-fi
-gh auth setup-git > /dev/null 2>&1 || true
-utente="$(gh api user -q .login 2> /dev/null || echo "?")"
-ok "sei $utente"
-
 say "Node e FFmpeg"
 command -v node > /dev/null 2>&1 || brew install node > /dev/null
 command -v ffmpeg > /dev/null 2>&1 || brew install ffmpeg > /dev/null
@@ -69,17 +59,32 @@ fi
 ok "$(claude --version 2> /dev/null | head -1)"
 
 say "Lo studio"
-if [ -d "$DEST/.git" ]; then
-  git -C "$DEST" remote set-url origin "https://github.com/$REPO.git"
-  git -C "$DEST" pull --ff-only -q || die "non riesco ad aggiornare $DEST: ci sono modifiche locali. Guarda 'git -C \"$DEST\" status'"
+URL="https://github.com/$REPO.git"
+command -v git > /dev/null 2>&1 || die "manca git: rilancia questo comando (Homebrew lo installa con gli strumenti di Apple)"
+if [ -d "$DEST/.git" ] && [ "$(git -C "$DEST" remote get-url origin 2> /dev/null)" = "$URL" ] && git -C "$DEST" pull --ff-only -q 2> /dev/null; then
   ok "aggiornato in $DEST"
-elif [ -n "${CATO_MOTION_SRC:-}" ]; then
-  git clone -q "$CATO_MOTION_SRC" "$DEST"
-  ok "clonato in $DEST (sorgente di prova)"
-elif gh repo clone "$REPO" "$DEST" -- -q 2> /dev/null; then
-  ok "clonato in $DEST"
 else
-  die "il tuo utente GitHub ($utente) non vede il repo $REPO. Chiedi l'accesso a Diego (utente GitHub dvianello-cato), accetta l'invito che ti arriva per email, poi rilancia questo comando."
+  if [ -e "$DEST" ]; then
+    # Studio vecchio (altro indirizzo o altra storia): lo sposto da parte e ne scarico uno nuovo, poi riporto i film.
+    vecchio="$DEST-vecchio-$(date +%Y%m%d-%H%M%S)"
+    mv "$DEST" "$vecchio"
+    echo "  lo studio che avevi è stato spostato in $vecchio"
+  fi
+  if [ -n "${CATO_MOTION_SRC:-}" ]; then
+    git clone -q "$CATO_MOTION_SRC" "$DEST" || die "non riesco a scaricare lo studio: rilancia questo comando"
+  else
+    git clone -q "$URL" "$DEST" || die "non riesco a scaricare lo studio: controlla la connessione e rilancia questo comando"
+  fi
+  ok "scaricato in $DEST"
+  if [ -n "${vecchio:-}" ] && [ -d "$vecchio/films" ]; then
+    mkdir -p "$DEST/films"
+    for f in "$vecchio"/films/*/; do
+      [ -d "$f" ] || continue
+      n="$(basename "$f")"
+      [ -e "$DEST/films/$n" ] || cp -R "$f" "$DEST/films/$n"
+    done
+    ok "i tuoi film sono di nuovo in $DEST/films"
+  fi
 fi
 
 if [ "$PROVA" = 1 ]; then ok "prova: fermo qui, senza aprire Claude Code"; exit 0; fi
